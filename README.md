@@ -6,7 +6,7 @@ supports:
 - **Multi-Year Solutions**: Organize solutions by year.
 - **Separate Parts Testing**: Test Part 1 and Part 2 independently.
 - **Multiple Sample Inputs**: Support for multiple sample inputs.
-- **Latest Kotlin and Java Versions**: Uses Kotlin 1.9.10 and Java JDK 21.
+- **Latest Kotlin and Java Versions**: Uses Kotlin 2.0.21 and Java JDK 21.
 - **Custom Gradle Tasks**: For running solutions, tests, and setting up new days.
 - **Flexible Output Options**: Output to console, file, or both.
 
