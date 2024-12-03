@@ -89,8 +89,9 @@ tasks.register("newDay") {
 
         val packagePrefix = "dev.daschi"
         val packagePath = "$packagePrefix.year$year.day$dayPadded"
-        val packageDir = "src/main/kotlin/year$year/day$dayPadded"
-        val testDir = "src/test/kotlin/year$year/day$dayPadded"
+        val directoryPrefix = "dev/daschi"
+        val packageDir = "src/main/kotlin/$directoryPrefix/year$year/day$dayPadded"
+        val testDir = "src/test/kotlin/$directoryPrefix/year$year/day$dayPadded"
         val inputDir = "src/main/resources/inputs/year$year"
         val testInputDir = "src/test/resources/inputs/year$year"
         val outputDir = "outputs/year$year"
