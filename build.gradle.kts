@@ -65,7 +65,7 @@ tasks.register<Test>("testDay") {
     val packagePath = "dev/daschi/year$year/day$dayPadded"
     // Include only the tests for the specified day and year
     include("**/$packagePath/**")
-    // Adjust the test class matching pattern
+    // Include all test classes inside the specified package
     filter {
         includeTestsMatching("dev.daschi.year$year.day$dayPadded.*")
     }
