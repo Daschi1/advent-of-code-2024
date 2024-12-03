@@ -29,22 +29,23 @@ fun main(args: Array<String>) {
             println("Invalid day. Must be an integer.")
             exitProcess(1)
         }
+        val dayPadded = day.toString().padStart(2, '0')
+
         val part = args.getOrNull(2) ?: "both"
         val outputOptionArg = args.find { it.startsWith("--output=") }
         val outputOption = outputOptionArg?.substringAfter("=") ?: "both"
 
-        // use format to make days 0 padded if needed, e.g. 3 becomes 03
-        val className = "dev.daschi.year$year.day%02d.Day%02d".format(day, day)
+        val className = "dev.daschi.year$year.day$dayPadded.Day$dayPadded"
         val solution = loadSolution(className)
 
         val results = mutableListOf<String>()
 
         when (part) {
-            "1" -> results.add("Year ${solution.year} Day ${solution.day} Part 1: ${solution.part1()}")
-            "2" -> results.add("Year ${solution.year} Day ${solution.day} Part 2: ${solution.part2()}")
+            "1" -> results.add("Year ${solution.year} Day $dayPadded Part 1: ${solution.part1()}")
+            "2" -> results.add("Year ${solution.year} Day $dayPadded Part 2: ${solution.part2()}")
             "both" -> {
-                results.add("Year ${solution.year} Day ${solution.day} Part 1: ${solution.part1()}")
-                results.add("Year ${solution.year} Day ${solution.day} Part 2: ${solution.part2()}")
+                results.add("Year ${solution.year} Day $dayPadded Part 1: ${solution.part1()}")
+                results.add("Year ${solution.year} Day $dayPadded Part 2: ${solution.part2()}")
             }
 
             else -> {
