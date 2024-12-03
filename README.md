@@ -80,8 +80,8 @@ Use the `newDay` Gradle task to set up templates for a new day:
 
 This will generate:
 
-- **Solution File**: `src/main/kotlin/year2024/day01/Day01.kt`
-- **Test File**: `src/test/kotlin/year2024/day01/Day01Test.kt`
+- **Solution File**: `src/main/kotlin/dev/daschi/year2024/day01/Day01.kt`
+- **Test File**: `src/test/kotlin/dev/daschi/year2024/day01/Day01Test.kt`
 - **Input File**: `src/main/resources/inputs/year2024/day01.txt`
 - **Sample Input File**: `src/test/resources/inputs/year2024/day01_sample1.txt`
 
