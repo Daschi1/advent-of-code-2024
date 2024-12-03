@@ -30,13 +30,11 @@ tasks.register("runSolution") {
 
     doLast {
         val year = project.findProperty("year")?.toString()
+            ?: throw GradleException("Please provide -Pyear=<year>")
         val day = project.findProperty("day")?.toString()
+            ?: throw GradleException("Please provide -Pday=<day>")
         val part = project.findProperty("part")?.toString() ?: "both"
         val output = project.findProperty("output")?.toString() ?: "both"
-
-        if (year == null || day == null) {
-            throw GradleException("Please provide -Pyear=<year> -Pday=<day>")
-        }
 
         javaexec {
             val applicationMainClass = "dev.daschi.MainKt"
@@ -54,11 +52,9 @@ tasks.register("testDay") {
 
     doLast {
         val year = project.findProperty("year")?.toString()
+            ?: throw GradleException("Please provide -Pyear=<year>")
         val day = project.findProperty("day")?.toString()
-
-        if (year == null || day == null) {
-            throw GradleException("Please provide -Pyear=<year> -Pday=<day>")
-        }
+            ?: throw GradleException("Please provide -Pday=<day>")
 
         val testTask = tasks.test.get()
         testTask.useJUnitPlatform()
@@ -75,11 +71,9 @@ tasks.register("newDay") {
 
     doLast {
         val year = project.findProperty("year")?.toString()
+            ?: throw GradleException("Please provide -Pyear=<year>")
         val day = project.findProperty("day")?.toString()
-
-        if (year == null || day == null) {
-            throw GradleException("Please provide -Pyear=<year> -Pday=<day>")
-        }
+            ?: throw GradleException("Please provide -Pday=<day>")
 
         val dayNumber = day.toInt()
         val yearNumber = year.toInt()
