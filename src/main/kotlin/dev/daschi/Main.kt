@@ -29,7 +29,7 @@ fun main(args: Array<String>) {
         return
     }
 
-    val className = "year$year.day%02d.Day%02d".format(day, day)
+    val className = "dev.daschi.year$year.day%02d.Day%02d".format(day, day)
     val solution = try {
         val clazz = Class.forName(className).kotlin
         val instance = clazz.objectInstance ?: clazz.constructors.first().call()
