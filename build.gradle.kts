@@ -45,25 +45,29 @@ tasks.register("runSolution") {
     }
 }
 
-tasks.register("testDay") {
+tasks.register<Test>("testDay") {
     group = "verification"
     description = "Run tests for a specific day and year."
-    dependsOn(tasks.test.get())
 
-    doLast {
-        val year = project.findProperty("year")?.toString()
-            ?: throw GradleException("Please provide -Pyear=<year>")
-        val day = project.findProperty("day")?.toString()
-            ?: throw GradleException("Please provide -Pday=<day>")
+    val year = project.findProperty("year")?.toString()
+        ?: throw GradleException("Please provide -Pyear=<year>")
+    val day = project.findProperty("day")?.toString()
+        ?: throw GradleException("Please provide -Pday=<day>")
 
-        val testTask = tasks.test.get()
-        testTask.useJUnitPlatform()
-        testTask.include("**/year$year/day$day/**")
-        testTask.filter {
-            includeTestsMatching("*Day${day.padStart(2, '0')}Test")
-        }
+    val dayPadded = day.padStart(2, '0')
+
+    testClassesDirs = sourceSets["test"].output.classesDirs
+    classpath = sourceSets["test"].runtimeClasspath
+
+    useJUnitPlatform()
+
+    // Include only the tests for the specified day and year
+    include("**/year$year/day$dayPadded/**")
+    filter {
+        includeTestsMatching("*year$year.day$dayPadded.Day${dayPadded}Test")
     }
 }
+
 
 tasks.register("newDay") {
     group = "setup"
