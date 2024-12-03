@@ -24,25 +24,20 @@ kotlin {
     jvmToolchain(21)
 }
 
-tasks.register("runSolution") {
+tasks.register<JavaExec>("runSolution") {
     group = "application"
     description = "Run the solution for a specific day and year."
 
-    doLast {
-        val year = project.findProperty("year")?.toString()
-            ?: throw GradleException("Please provide -Pyear=<year>")
-        val day = project.findProperty("day")?.toString()
-            ?: throw GradleException("Please provide -Pday=<day>")
-        val part = project.findProperty("part")?.toString() ?: "both"
-        val output = project.findProperty("output")?.toString() ?: "both"
+    val year = project.findProperty("year")?.toString()
+        ?: throw GradleException("Please provide -Pyear=<year>")
+    val day = project.findProperty("day")?.toString()
+        ?: throw GradleException("Please provide -Pday=<day>")
+    val part = project.findProperty("part")?.toString() ?: "both"
+    val output = project.findProperty("output")?.toString() ?: "both"
 
-        javaexec {
-            val applicationMainClass = "dev.daschi.MainKt"
-            mainClass.set(applicationMainClass)
-            classpath = sourceSets["main"].runtimeClasspath
-            args = listOf(year, day, part, "--output=$output")
-        }
-    }
+    mainClass.set("dev.daschi.MainKt")
+    classpath = sourceSets["main"].runtimeClasspath
+    args = listOf(year, day, part, "--output=$output")
 }
 
 tasks.register<Test>("testDay") {
