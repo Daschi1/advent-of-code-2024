@@ -66,7 +66,6 @@ tasks.register<Test>("testDay") {
     }
 }
 
-
 tasks.register("newDay") {
     group = "setup"
     description = "Create template files for a new day."
