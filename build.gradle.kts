@@ -113,11 +113,11 @@ tasks.register("newDay") {
                 /**
                  * Solution for Day $dayNumber of Advent of Code $year.
                  */
-                class Day$dayPadded(input: List<String>? = null) : Solution {
+                class Day$dayPadded : Solution {
                     override val year = $yearNumber
                     override val day = $dayNumber
 
-                    private val input = input ?: Input.readLines(year, day)
+                    private val input = Input.readLines(year, day)
 
                     /**
                      * Solves Part 1.
