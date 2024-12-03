@@ -2,6 +2,7 @@ package dev.daschi
 
 import dev.daschi.util.Solution
 import java.io.File
+import kotlin.reflect.full.primaryConstructor
 import kotlin.system.exitProcess
 
 /**
@@ -82,14 +83,21 @@ fun main(args: Array<String>) {
 fun loadSolution(className: String): Solution {
     return try {
         val clazz = Class.forName(className).kotlin
-        val instance =
-            clazz.objectInstance ?: clazz.constructors.firstOrNull { it.parameters.isEmpty() }
-                ?.call()
-            ?: throw IllegalArgumentException("No suitable constructor found for class '$className'")
-        instance as? Solution
-            ?: throw IllegalArgumentException("Class '$className' does not implement Solution interface.")
+        val primaryConstructor = clazz.primaryConstructor
+            ?: throw IllegalArgumentException("No primary constructor found for class '$className'")
+
+        // Check if all parameters have default values
+        if (primaryConstructor.parameters.all { it.isOptional }) {
+            // Use callBy with an empty map to utilize default parameter values
+            val instance = primaryConstructor.callBy(emptyMap())
+            instance as? Solution
+                ?: throw IllegalArgumentException("Class '$className' does not implement Solution interface.")
+        } else {
+            throw IllegalArgumentException("Primary constructor of class '$className' requires parameters without default values.")
+        }
     } catch (e: Exception) {
         println("Error loading solution class '$className': ${e.message}")
+        e.printStackTrace()
         throw e // Rethrow the exception to be caught in main
     }
 }
