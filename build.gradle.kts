@@ -15,11 +15,6 @@ dependencies {
     testImplementation(kotlin("test"))
 }
 
-val applicationMainClass = "dev.daschi.MainKt"
-application {
-    mainClass.set(applicationMainClass)
-}
-
 tasks.test {
     useJUnitPlatform()
 }
@@ -42,6 +37,7 @@ tasks.register("runSolution") {
         }
 
         javaexec {
+            val applicationMainClass = "dev.daschi.MainKt"
             mainClass.set(applicationMainClass)
             classpath = sourceSets["main"].runtimeClasspath
             args = listOf(year, day, part, "--output=$output")
