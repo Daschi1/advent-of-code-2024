@@ -141,6 +141,7 @@ tasks.register("newDay") {
 
                 import dev.daschi.util.Input
                 import org.junit.jupiter.params.ParameterizedTest
+                import org.junit.jupiter.params.provider.Arguments
                 import org.junit.jupiter.params.provider.MethodSource
                 import kotlin.test.assertEquals
 
@@ -152,12 +153,12 @@ tasks.register("newDay") {
                     companion object {
                         @JvmStatic
                         fun part1Samples() = listOf(
-                            // arrayOf(sampleNumber, expectedResult)
+                            Arguments.of(sampleNumberToLoad, expectedResult)
                         )
 
                         @JvmStatic
                         fun part2Samples() = listOf(
-                            // arrayOf(sampleNumber, expectedResult)
+                            Arguments.of(sampleNumberToLoad, expectedResult)
                         )
                     }
 
