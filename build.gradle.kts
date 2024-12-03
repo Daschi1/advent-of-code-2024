@@ -129,6 +129,7 @@ tasks.register("newDay") {
                         return null
                     }
                 }
+                
                 """.trimIndent()
             )
         }
@@ -178,6 +179,7 @@ tasks.register("newDay") {
                         assertEquals(expected, day.part2())
                     }
                 }
+                
                 """.trimIndent()
             )
         }
