@@ -50,6 +50,7 @@ tasks.register("runSolution") {
 tasks.register("testDay") {
     group = "verification"
     description = "Run tests for a specific day and year."
+    dependsOn(tasks.test.get())
 
     doLast {
         val year = project.findProperty("year")?.toString()
@@ -65,7 +66,6 @@ tasks.register("testDay") {
         testTask.filter {
             includeTestsMatching("*Day${day.padStart(2, '0')}Test")
         }
-        dependsOn(testTask)
     }
 }
 
