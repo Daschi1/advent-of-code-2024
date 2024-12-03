@@ -2,6 +2,7 @@ package dev.daschi
 
 import dev.daschi.util.Solution
 import java.io.File
+import kotlin.system.exitProcess
 
 /**
  * Main function to run the solution.
@@ -13,63 +14,83 @@ import java.io.File
  * - outputOption (optional): "--output=console|file|both" (default: "both")
  */
 fun main(args: Array<String>) {
-    if (args.size < 2) {
-        println("Usage: <year> <day> [part] [--output=console|file|both]")
-        return
-    }
+    try {
+        if (args.size < 2) {
+            println("Usage: <year> <day> [part] [--output=console|file|both]")
+            exitProcess(1)
+        }
 
-    val year = args[0].toIntOrNull()
-    val day = args[1].toIntOrNull()
-    val part = args.getOrNull(2) ?: "both"
-    val outputOptionArg = args.find { it.startsWith("--output=") }
-    val outputOption = outputOptionArg?.substringAfter("=") ?: "both"
+        val year = args[0].toIntOrNull() ?: run {
+            println("Invalid year. Must be an integer.")
+            exitProcess(1)
+        }
+        val day = args[1].toIntOrNull() ?: run {
+            println("Invalid day. Must be an integer.")
+            exitProcess(1)
+        }
+        val part = args.getOrNull(2) ?: "both"
+        val outputOptionArg = args.find { it.startsWith("--output=") }
+        val outputOption = outputOptionArg?.substringAfter("=") ?: "both"
 
-    if (year == null || day == null) {
-        println("Invalid year or day. Both must be integers.")
-        return
-    }
+        // use format to make days 0 padded if needed, e.g. 3 becomes 03
+        val className = "dev.daschi.year$year.day%02d.Day%02d".format(day, day)
+        val solution = loadSolution(className)
 
-    val className = "dev.daschi.year$year.day%02d.Day%02d".format(day, day)
-    val solution = try {
-        val clazz = Class.forName(className).kotlin
-        val instance = clazz.objectInstance ?: clazz.constructors.first().call()
-        instance as? Solution
-            ?: throw IllegalArgumentException("Class does not implement Solution interface.")
-    } catch (e: ClassNotFoundException) {
-        println("Solution class '$className' not found.")
-        return
+        val results = mutableListOf<String>()
+
+        when (part) {
+            "1" -> results.add("Year ${solution.year} Day ${solution.day} Part 1: ${solution.part1()}")
+            "2" -> results.add("Year ${solution.year} Day ${solution.day} Part 2: ${solution.part2()}")
+            "both" -> {
+                results.add("Year ${solution.year} Day ${solution.day} Part 1: ${solution.part1()}")
+                results.add("Year ${solution.year} Day ${solution.day} Part 2: ${solution.part2()}")
+            }
+
+            else -> {
+                println("Invalid part: '$part'. Expected '1', '2', or 'both'.")
+                exitProcess(1)
+            }
+        }
+
+        when (outputOption) {
+            "console" -> results.forEach(::println)
+            "file" -> saveResultsToFile(year, day, results)
+            "both" -> {
+                results.forEach(::println)
+                saveResultsToFile(year, day, results)
+            }
+
+            else -> {
+                println("Invalid output option: '$outputOption'. Expected 'console', 'file', or 'both'.")
+                exitProcess(1)
+            }
+        }
     } catch (e: Exception) {
-        println("Error loading solution: ${e.message}")
-        return
+        println("An error occurred:")
+        e.printStackTrace()
+        exitProcess(1)
     }
+}
 
-    val results = mutableListOf<String>()
-
-    when (part) {
-        "1" -> results.add("Year ${solution.year} Day ${solution.day} Part 1: ${solution.part1()}")
-        "2" -> results.add("Year ${solution.year} Day ${solution.day} Part 2: ${solution.part2()}")
-        "both" -> {
-            results.add("Year ${solution.year} Day ${solution.day} Part 1: ${solution.part1()}")
-            results.add("Year ${solution.year} Day ${solution.day} Part 2: ${solution.part2()}")
-        }
-
-        else -> {
-            println("Invalid part: '$part'. Expected '1', '2', or 'both'.")
-            return
-        }
-    }
-
-    when (outputOption) {
-        "console" -> results.forEach(::println)
-        "file" -> saveResultsToFile(year, day, results)
-        "both" -> {
-            results.forEach(::println)
-            saveResultsToFile(year, day, results)
-        }
-
-        else -> {
-            println("Invalid output option: '$outputOption'. Expected 'console', 'file', or 'both'.")
-        }
+/**
+ * Loads the solution class for the specified day and year.
+ *
+ * @param className The fully qualified class name of the solution.
+ * @return An instance of the solution class implementing the Solution interface.
+ * @throws Exception if the class cannot be loaded or instantiated.
+ */
+fun loadSolution(className: String): Solution {
+    return try {
+        val clazz = Class.forName(className).kotlin
+        val instance =
+            clazz.objectInstance ?: clazz.constructors.firstOrNull { it.parameters.isEmpty() }
+                ?.call()
+            ?: throw IllegalArgumentException("No suitable constructor found for class '$className'")
+        instance as? Solution
+            ?: throw IllegalArgumentException("Class '$className' does not implement Solution interface.")
+    } catch (e: Exception) {
+        println("Error loading solution class '$className': ${e.message}")
+        throw e // Rethrow the exception to be caught in main
     }
 }
 
