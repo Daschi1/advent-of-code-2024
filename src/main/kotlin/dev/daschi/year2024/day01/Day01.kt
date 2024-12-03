@@ -6,11 +6,11 @@ import dev.daschi.util.Solution
 /**
  * Solution for Day 1 of Advent of Code 2024.
  */
-class Day01(input: List<String>? = null) : Solution {
+class Day01(
+    private val input: List<String> = Input.readLines(2024, 1)
+) : Solution {
     override val year = 2024
     override val day = 1
-
-    private val input = input ?: Input.readLines(year, day)
 
     /**
      * Solves Part 1.
