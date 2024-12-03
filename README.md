@@ -131,18 +131,6 @@ Control where the output is sent:
 
 ---
 
-## **Contributing**
-
-Contributions are welcome! Feel free to submit issues or pull requests.
-
----
-
-## **License**
-
-This project is licensed under the MIT License.
-
----
-
 ## **Acknowledgments**
 
 - [Advent of Code](https://adventofcode.com/) by Eric Wastl.
