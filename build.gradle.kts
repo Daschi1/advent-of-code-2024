@@ -87,9 +87,10 @@ tasks.register("newDay") {
         val yearNumber = year.toInt()
         val dayPadded = day.padStart(2, '0')
 
-        val packagePath = "year$year/day$dayPadded"
-        val packageDir = "src/main/kotlin/$packagePath"
-        val testDir = "src/test/kotlin/$packagePath"
+        val packagePrefix = "dev.daschi"
+        val packagePath = "$packagePrefix.year$year.day$dayPadded"
+        val packageDir = "src/main/kotlin/year$year/day$dayPadded"
+        val testDir = "src/test/kotlin/year$year/day$dayPadded"
         val inputDir = "src/main/resources/inputs/year$year"
         val testInputDir = "src/test/resources/inputs/year$year"
         val outputDir = "outputs/year$year"
@@ -106,19 +107,20 @@ tasks.register("newDay") {
                 """
                 package $packagePath
 
-                import util.Solution
+                import $packagePrefix.util.Input
+                import $packagePrefix.util.Solution
 
                 /**
                  * Solution for Day $dayNumber of Advent of Code $year.
                  */
-                class Day$dayPadded(private val input: List<String>? = null) : Solution {
+                class Day$dayPadded(input: List<String>? = null) : Solution {
                     override val year = $yearNumber
                     override val day = $dayNumber
 
                     private val processedInput = input ?: readInput()
 
                     private fun readInput(): List<String> {
-                        return util.Input.readLines(year, day)
+                        return Input.readLines(year, day)
                     }
 
                     /**
