@@ -62,9 +62,12 @@ tasks.register<Test>("testDay") {
     useJUnitPlatform()
 
     // Include only the tests for the specified day and year
-    include("**/year$year/day$dayPadded/**")
+    val packagePath = "dev/daschi/year$year/day$dayPadded"
+    // Include only the tests for the specified day and year
+    include("**/$packagePath/**")
+    // Adjust the test class matching pattern
     filter {
-        includeTestsMatching("*year$year.day$dayPadded.Day${dayPadded}Test")
+        includeTestsMatching("dev.daschi.year$year.day$dayPadded.*")
     }
 }
 
