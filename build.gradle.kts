@@ -117,11 +117,7 @@ tasks.register("newDay") {
                     override val year = $yearNumber
                     override val day = $dayNumber
 
-                    private val processedInput = input ?: readInput()
-
-                    private fun readInput(): List<String> {
-                        return Input.readLines(year, day)
-                    }
+                    private val input = input ?: Input.readLines(year, day)
 
                     /**
                      * Solves Part 1.
