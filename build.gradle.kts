@@ -114,11 +114,11 @@ tasks.register("newDay") {
                 /**
                  * Solution for Day $dayNumber of Advent of Code $year.
                  */
-                class Day$dayPadded : Solution {
+                class Day$dayPadded(input: List<String>? = null) : Solution {
                     override val year = $yearNumber
                     override val day = $dayNumber
 
-                    private val input = Input.readLines(year, day)
+                    private val input = input ?: Input.readLines(year, day)
 
                     /**
                      * Solves Part 1.
@@ -146,6 +146,7 @@ tasks.register("newDay") {
                 """
                 package $packagePath
 
+                import dev.daschi.util.Input
                 import org.junit.jupiter.params.ParameterizedTest
                 import org.junit.jupiter.params.provider.MethodSource
                 import kotlin.test.assertEquals
@@ -170,7 +171,7 @@ tasks.register("newDay") {
                     @ParameterizedTest(name = "Part 1 Sample {0}")
                     @MethodSource("part1Samples")
                     fun testPart1Samples(sampleNumber: Int, expected: Any?) {
-                        val sampleInput = util.Input.readLines($yearNumber, $dayNumber, sampleNumber)
+                        val sampleInput = Input.readLines($yearNumber, $dayNumber, sampleNumber)
                         val day = Day$dayPadded(sampleInput)
                         assertEquals(expected, day.part1())
                     }
@@ -178,7 +179,7 @@ tasks.register("newDay") {
                     @ParameterizedTest(name = "Part 2 Sample {0}")
                     @MethodSource("part2Samples")
                     fun testPart2Samples(sampleNumber: Int, expected: Any?) {
-                        val sampleInput = util.Input.readLines($yearNumber, $dayNumber, sampleNumber)
+                        val sampleInput = Input.readLines($yearNumber, $dayNumber, sampleNumber)
                         val day = Day$dayPadded(sampleInput)
                         assertEquals(expected, day.part2())
                     }
