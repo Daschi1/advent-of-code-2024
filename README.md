@@ -1,4 +1,4 @@
-# Advent of Code Kotlin Framework
+# Using Advent of Code Kotlin Framework
 
 This is a Kotlin framework for solving [Advent of Code](https://adventofcode.com/) puzzles. It
 supports:
