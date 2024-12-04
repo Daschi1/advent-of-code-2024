@@ -2,6 +2,7 @@ package dev.daschi.year2024.day01
 
 import dev.daschi.util.Input
 import dev.daschi.util.Solution
+import java.util.Arrays
 
 /**
  * Solution for Day 1 of Advent of Code 2024.
@@ -12,10 +13,18 @@ class Day01(
     override val year = 2024
     override val day = 1
 
-    private val input = parseInput(input)
+    private val parsedInput = parseInput(input)
 
-    private fun parseInput(input: List<String>): List<String> {
-        return input
+    private fun parseInput(input: List<String>): Pair<IntArray, IntArray> {
+        val size = input.size
+        val first = IntArray(size)
+        val second = IntArray(size)
+        input.forEachIndexed { i, s ->
+            val split = s.split("   ")
+            first[i] = split[0].toInt()
+            second[i] = split[1].toInt()
+        }
+        return Pair(first, second)
     }
 
     /**
@@ -23,6 +32,10 @@ class Day01(
      */
     override fun part1(): Any? {
         // TODO: Implement Part 1
+
+        println(parsedInput.first.contentToString())
+        println(parsedInput.second.contentToString())
+
         return null
     }
 
