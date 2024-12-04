@@ -7,10 +7,16 @@ import dev.daschi.util.Solution
  * Solution for Day 1 of Advent of Code 2024.
  */
 class Day01(
-    private val input: List<String> = Input.readLines(2024, 1)
+    input: List<String> = Input.readLines(2024, 1)
 ) : Solution {
     override val year = 2024
     override val day = 1
+
+    private val input = parseInput(input)
+
+    private fun parseInput(input: List<String>): List<String> {
+        return input
+    }
 
     /**
      * Solves Part 1.
