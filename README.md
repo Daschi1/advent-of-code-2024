@@ -22,13 +22,15 @@ advent-of-code/
 ├── src/
 │   ├── main/
 │   │   ├── kotlin/
-│   │   │   ├── yearYYYY/
-│   │   │   │   ├── dayDD/
-│   │   │   │   │   └── DayDD.kt
-│   │   │   │   └── ...
-│   │   │   └── util/
-│   │   │       ├── Input.kt
-│   │   │       └── Solution.kt
+│   │   │   └── dev/
+│   │   │       └── daschi/
+│   │   │           ├── yearYYYY/
+│   │   │           │   ├── dayDD/
+│   │   │           │   │   └── DayDD.kt
+│   │   │           │   └── ...
+│   │   │           └── util/
+│   │   │               ├── Input.kt
+│   │   │               └── Solution.kt
 │   │   └── resources/
 │   │       └── inputs/
 │   │           ├── yearYYYY/
@@ -36,9 +38,12 @@ advent-of-code/
 │   │           └── ...
 │   └── test/
 │       ├── kotlin/
-│       │   └── yearYYYY/
-│       │       └── dayDD/
-│       │           └── DayDDTest.kt
+│       │   └── dev/
+│       │       └── daschi/
+│       │           ├── yearYYYY/
+│       │           │   ├── dayDD/
+│       │           │   │   └── DayDDTest.kt
+│       │           │   └── ...
 │       └── resources/
 │           └── inputs/
 │               ├── yearYYYY/
