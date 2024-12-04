@@ -113,7 +113,7 @@ tasks.register("newDay") {
                     override val year = $yearNumber
                     override val day = $dayNumber
                     
-                    private val input = parseInput(input)
+                    private val parsedInput = parseInput(input)
 
                     private fun parseInput(input: List<String>): List<String> {
                         return input
