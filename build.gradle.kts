@@ -160,12 +160,14 @@ tasks.register("newDay") {
                     companion object {
                         @JvmStatic
                         fun part1Samples() = listOf(
-                            Arguments.of(sampleNumberToLoad, expectedResult)
+                            // sampleNumberToLoad, expectedResult
+                            Arguments.of(1, -1, expectedResult)
                         )
 
                         @JvmStatic
                         fun part2Samples() = listOf(
-                            Arguments.of(sampleNumberToLoad, expectedResult)
+                            // sampleNumberToLoad, expectedResult
+                            Arguments.of(1, -1)
                         )
                     }
 

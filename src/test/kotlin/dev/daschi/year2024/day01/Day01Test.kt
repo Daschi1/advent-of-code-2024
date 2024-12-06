@@ -14,11 +14,13 @@ class Day01Test {
     companion object {
         @JvmStatic
         fun part1Samples() = listOf(
+            // sampleNumberToLoad, expectedResult
             Arguments.of(1, 11)
         )
 
         @JvmStatic
         fun part2Samples() = listOf(
+            // sampleNumberToLoad, expectedResult
             Arguments.of(1, 31)
         )
     }
