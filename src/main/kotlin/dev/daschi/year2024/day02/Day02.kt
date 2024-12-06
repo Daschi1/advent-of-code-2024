@@ -11,7 +11,7 @@ class Day02(
 ) : Solution {
     override val year = 2024
     override val day = 2
-    
+
     private val parsedInput = parseInput(input)
 
     private fun parseInput(input: List<String>): List<String> {
