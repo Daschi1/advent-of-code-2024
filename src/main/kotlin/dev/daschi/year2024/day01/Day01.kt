@@ -3,6 +3,7 @@ package dev.daschi.year2024.day01
 import dev.daschi.util.Input
 import dev.daschi.util.Solution
 import java.util.Arrays
+import kotlin.math.abs
 
 /**
  * Solution for Day 1 of Advent of Code 2024.
@@ -31,12 +32,18 @@ class Day01(
      * Solves Part 1.
      */
     override fun part1(): Any? {
-        // TODO: Implement Part 1
+        val firstSorted = parsedInput.first.sorted()
+        val secondSorted = parsedInput.second.sorted()
+        if (firstSorted.size != secondSorted.size) {
+            throw IllegalArgumentException("First and second part not the same size.")
+        }
 
-        println(parsedInput.first.contentToString())
-        println(parsedInput.second.contentToString())
+        val distance = IntArray(firstSorted.size)
+        for (i in firstSorted.indices) {
+            distance[i] = abs(firstSorted[i] - secondSorted[i])
+        }
 
-        return null
+        return distance.sum()
     }
 
     /**
