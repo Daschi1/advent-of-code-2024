@@ -124,7 +124,7 @@ tasks.register("newDay") {
                      */
                     override fun part1(): Any {
                         // TODO: Implement Part 1
-                        return null
+                        return -1
                     }
 
                     /**
@@ -132,7 +132,7 @@ tasks.register("newDay") {
                      */
                     override fun part2(): Any {
                         // TODO: Implement Part 2
-                        return null
+                        return -1
                     }
                 }
                 
