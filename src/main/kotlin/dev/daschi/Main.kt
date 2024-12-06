@@ -111,6 +111,6 @@ fun saveResultsToFile(year: Int, day: Int, results: List<String>) {
     val outputDir = File("outputs/year$year/day$dayPadded")
     if (!outputDir.exists()) outputDir.mkdirs()
     val outputFile = File(outputDir, "output.txt")
-    outputFile.writeText(results.joinToString("\n"))
+    outputFile.writeText(results.joinToString("\n", postfix = "\n"))
     println("Results saved to '${outputFile.path}'")
 }
