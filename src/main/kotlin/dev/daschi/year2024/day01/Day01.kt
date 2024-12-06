@@ -35,7 +35,7 @@ class Day01(
         val firstSorted = parsedInput.first.sorted()
         val secondSorted = parsedInput.second.sorted()
         if (firstSorted.size != secondSorted.size) {
-            throw IllegalArgumentException("First and second part not the same size.")
+            throw IllegalArgumentException("First and second are part not the same size.")
         }
 
         val distance = IntArray(firstSorted.size)
