@@ -107,10 +107,10 @@ fun loadSolution(className: String): Solution {
  * Saves the results to a file.
  */
 fun saveResultsToFile(year: Int, day: Int, results: List<String>) {
-    val outputDir = File("outputs/year$year")
+    val dayPadded = day.toString().padStart(2, '0')
+    val outputDir = File("outputs/year$year/day$dayPadded")
     if (!outputDir.exists()) outputDir.mkdirs()
-    // use string format to pad day numbers, e.g. 3 becomes 03
-    val outputFile = File(outputDir, "day%02d.txt".format(day))
+    val outputFile = File(outputDir, "output.txt")
     outputFile.writeText(results.joinToString("\n"))
     println("Results saved to '${outputFile.path}'")
 }

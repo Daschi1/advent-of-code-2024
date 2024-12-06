@@ -85,9 +85,9 @@ tasks.register("newDay") {
         val directoryPrefix = "dev/daschi"
         val packageDir = "src/main/kotlin/$directoryPrefix/year$year/day$dayPadded"
         val testDir = "src/test/kotlin/$directoryPrefix/year$year/day$dayPadded"
-        val inputDir = "src/main/resources/inputs/year$year"
-        val testInputDir = "src/test/resources/inputs/year$year"
-        val outputDir = "outputs/year$year"
+        val inputDir = "src/main/resources/inputs/year$year/day$dayPadded"
+        val testInputDir = "src/test/resources/inputs/year$year/day$dayPadded"
+        val outputDir = "outputs/year$year/day$dayPadded"
 
         mkdir(packageDir)
         mkdir(testDir)
@@ -190,12 +190,12 @@ tasks.register("newDay") {
             )
         }
 
-        val inputFile = file("$inputDir/day$dayPadded.txt")
+        val inputFile = file("$inputDir/input.txt")
         if (!inputFile.exists()) {
             inputFile.writeText("// Input for Day $dayNumber of Year $yearNumber")
         }
 
-        val sampleInputFile = file("$testInputDir/day${dayPadded}_sample1.txt")
+        val sampleInputFile = file("$testInputDir/sample1.txt")
         if (!sampleInputFile.exists()) {
             sampleInputFile.writeText("// Sample Input 1 for Day $dayNumber of Year $yearNumber")
         }

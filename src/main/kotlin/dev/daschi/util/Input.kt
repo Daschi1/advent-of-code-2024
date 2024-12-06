@@ -47,9 +47,9 @@ object Input {
     private fun fileName(year: Int, day: Int, sampleNumber: Int?): String {
         val dayPadded = day.toString().padStart(2, '0')
         return if (sampleNumber == null) {
-            "year$year/day$dayPadded.txt"
+            "year$year/day$dayPadded/input.txt"
         } else {
-            "year$year/day${dayPadded}_sample$sampleNumber.txt"
+            "year$year/day${dayPadded}/sample$sampleNumber.txt"
         }
     }
 }
