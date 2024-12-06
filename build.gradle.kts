@@ -192,12 +192,12 @@ tasks.register("newDay") {
 
         val inputFile = file("$inputDir/input.txt")
         if (!inputFile.exists()) {
-            inputFile.writeText("// Input for Day $dayNumber of Year $yearNumber")
+            inputFile.writeText("// Input for Day $dayNumber of Year $yearNumber\n")
         }
 
         val sampleInputFile = file("$testInputDir/sample1.txt")
         if (!sampleInputFile.exists()) {
-            sampleInputFile.writeText("// Sample Input 1 for Day $dayNumber of Year $yearNumber")
+            sampleInputFile.writeText("// Sample Input 1 for Day $dayNumber of Year $yearNumber\n")
         }
 
         println("Template files created for Day $dayNumber of Year $yearNumber.")
