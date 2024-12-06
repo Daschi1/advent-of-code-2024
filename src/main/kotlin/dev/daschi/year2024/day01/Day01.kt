@@ -2,7 +2,6 @@ package dev.daschi.year2024.day01
 
 import dev.daschi.util.Input
 import dev.daschi.util.Solution
-import java.util.Arrays
 import kotlin.math.abs
 
 /**
@@ -50,7 +49,20 @@ class Day01(
      * Solves Part 2.
      */
     override fun part2(): Any? {
-        // TODO: Implement Part 2
-        return null
+        val first = parsedInput.first
+        val second = parsedInput.second
+        if (first.size != second.size) {
+            throw IllegalArgumentException("First and second are part not the same size.")
+        }
+
+        val secondEachCount = second.groupBy { it }.mapValues { it.value.size }
+        var similarityScore = 0
+        for (i in first.indices) {
+            val currentNumber = first[i]
+            val countInSecond = secondEachCount[currentNumber] ?: 0
+            similarityScore += currentNumber * countInSecond
+        }
+
+        return similarityScore
     }
 }
