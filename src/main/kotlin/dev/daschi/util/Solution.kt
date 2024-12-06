@@ -11,11 +11,11 @@ interface Solution {
      * Solves Part 1 of the day's puzzle.
      * @return The result of Part 1.
      */
-    fun part1(): Any?
+    fun part1(): Any
 
     /**
      * Solves Part 2 of the day's puzzle.
      * @return The result of Part 2.
      */
-    fun part2(): Any?
+    fun part2(): Any
 }

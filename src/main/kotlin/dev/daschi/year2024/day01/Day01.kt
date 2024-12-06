@@ -30,7 +30,7 @@ class Day01(
     /**
      * Solves Part 1.
      */
-    override fun part1(): Any? {
+    override fun part1(): Any {
         val firstSorted = parsedInput.first.sorted()
         val secondSorted = parsedInput.second.sorted()
         if (firstSorted.size != secondSorted.size) {
@@ -48,7 +48,7 @@ class Day01(
     /**
      * Solves Part 2.
      */
-    override fun part2(): Any? {
+    override fun part2(): Any {
         val first = parsedInput.first
         val second = parsedInput.second
         if (first.size != second.size) {
