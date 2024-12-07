@@ -59,7 +59,66 @@ class Day03(
      * Solves Part 2.
      */
     override fun part2(): Any {
-        // TODO: Implement Part 2
-        return -1
+        val instructionPatterns = listOf(
+            """mul\(\d{1,3},\d{1,3}\)""", // Matches "mul(n,m)"
+            """do\(\)""",                 // Matches "do()"
+            """don't\(\)"""               // Matches "don't()"
+        )
+        val instructions = findInstructions(parsedInput, instructionPatterns)
+
+        return processInstructions(instructions)
+    }
+
+    /**
+     * Extracts all substrings from the input string that match any of the provided instruction patterns.
+     *
+     * @param input the input string to search for patterns
+     * @param instructionPatterns a list of regex patterns representing the instruction formats to match
+     * @return a list of all substrings matching any of the provided patterns
+     */
+    private fun findInstructions(input: String, instructionPatterns: List<String>): List<String> {
+        val combinedRegex = Regex(instructionPatterns.joinToString(separator = "|"))
+        return combinedRegex.findAll(input).map { it.value }.toList()
+    }
+
+    /**
+     * Processes a list of instructions and calculates the result based on their meanings.
+     *
+     * @param instructions the list of matched instructions
+     * @return the calculated result
+     */
+    private fun processInstructions(instructions: List<String>): Int {
+        var doMulInstructions = true
+        return instructions.fold(0) { result, instruction ->
+            when {
+                instruction.startsWith("don't()") -> {
+                    doMulInstructions = false
+                    result
+                }
+
+                instruction.startsWith("do()") -> {
+                    doMulInstructions = true
+                    result
+                }
+
+                instruction.startsWith("mul(") && doMulInstructions -> {
+                    result + parseMulInstruction(instruction)
+                }
+
+                else -> result
+            }
+        }
+    }
+
+    /**
+     * Parses a "mul(n,m)" instruction and returns the product of n and m.
+     *
+     * @param instruction the "mul(n,m)" instruction to parse
+     * @return the product of the two integers
+     */
+    private fun parseMulInstruction(instruction: String): Int {
+        val cleanedInstruction = instruction.removePrefix("mul(").removeSuffix(")")
+        val (m, n) = cleanedInstruction.split(",").map { it.toInt() }
+        return m * n
     }
 }
