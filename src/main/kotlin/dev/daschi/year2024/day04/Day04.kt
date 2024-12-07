@@ -46,7 +46,7 @@ class Day04(
         for (y in 0 until height) {
             for (x in 0 until width) {
                 for (direction in directions) {
-                    if (matchWordInGrid(y, x, direction.first, direction.second, word)) {
+                    if (matchWordInGrid(y, x, direction, word)) {
                         result++
                     }
                 }
@@ -56,17 +56,23 @@ class Day04(
         return result
     }
 
-    private fun matchWordInGrid(yStart: Int, xStart: Int, dy: Int, dx: Int, word: String): Boolean {
+    private fun matchWordInGrid(
+        yStart: Int,
+        xStart: Int,
+        direction: Pair<Int, Int>,
+        word: String
+    ): Boolean {
         val height = parsedInput.size
         val width = parsedInput[0].size
         var y = yStart
         var x = xStart
+        println("y: $y, x: $x, direction: $direction")
         for (i in word.indices) {
             if (y !in (0 until height) || x !in (0 until width) || word[i] != parsedInput[y][x]) {
                 return false
             }
-            y += dy
-            x += dx
+            y += direction.first
+            x += direction.second
         }
         return true
     }
@@ -75,7 +81,63 @@ class Day04(
      * Solves Part 2.
      */
     override fun part2(): Any {
-        // TODO: Implement Part 2
-        return -1
+        val directions = mapOf(
+            Pair("down-right", Pair(1, 1)),
+            Pair("up-left", Pair(-1, -1)),
+            Pair("down-left", Pair(1, -1)),
+            Pair("up-right", Pair(-1, 1)),
+        )
+        var result = 0
+
+        val height = parsedInput.size
+        val width = parsedInput[0].size
+        val word = "MAS"
+
+        for (y in 0 until height) {
+            for (x in 0 until width) {
+                for ((name, direction) in directions) {
+                    if (matchWordInGrid(y, x, direction, word)) {
+                        when (name) {
+                            "down-right" ->
+                                if (
+                                    matchWordInGrid(y + 2, x, directions["up-right"]!!, word) ||
+                                    matchWordInGrid(y, x + 2, directions["down-left"]!!, word)
+                                ) {
+                                    result++
+                                    print("y: $y, x: $x, name: $name")
+                                    if (matchWordInGrid(y + 2, x, directions["up-right"]!!, word)) {
+                                        val toY = y + 2
+                                        val toX = x
+                                        print("; y: $toY, x: $toX, name: up-right")
+                                    }
+                                    if ( matchWordInGrid(y, x + 2, directions["down-left"]!!, word)) {
+                                        val toY = y
+                                        val toX = x + 2
+                                        print("; y: $toY, x: $toX, name: up-right")
+                                    }
+                                    println("---")
+                                }
+
+                            "up-left" -> if (
+                                matchWordInGrid(y - 2, x, directions["down-left"]!!, word) ||
+                                matchWordInGrid(y, x - 2, directions["up-right"]!!, word)
+                            ) result++
+
+                            "down-left" -> if (
+                                matchWordInGrid(y + 2, x, directions["up-left"]!!, word) ||
+                                matchWordInGrid(y, x - 2, directions["down-right"]!!, word)
+                            ) result++
+
+                            "up-right" -> if (
+                                matchWordInGrid(y - 2, x, directions["down-right"]!!, word) ||
+                                matchWordInGrid(y, x + 2, directions["up-left"]!!, word)
+                            ) result++
+                        }
+                    }
+                }
+            }
+        }
+
+        return result
     }
 }
