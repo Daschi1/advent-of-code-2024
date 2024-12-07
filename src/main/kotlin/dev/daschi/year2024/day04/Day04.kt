@@ -43,14 +43,6 @@ class Day04(
         val width = parsedInput[0].size
         val word = "XMAS"
 
-//        for (y in 0 until height) {
-//            for (x in 0 until width) {
-//                print(parsedInput[y][x])
-//            }
-//            print("\n")
-//        }
-//        println("---")
-
         for (y in 0 until height) {
             for (x in 0 until width) {
                 for (direction in directions) {
@@ -69,24 +61,15 @@ class Day04(
         val width = parsedInput[0].size
         var y = yStart
         var x = xStart
-        val traversed = mutableListOf<Pair<Int, Int>>()
         for (i in word.indices) {
-            traversed.add(Pair(y, x))
             if (y !in (0 until height) || x !in (0 until width) || word[i] != parsedInput[y][x]) {
                 return false
             }
             y += dy
             x += dx
         }
-//        println(traversed)
         return true
     }
-
-    /*private fun printGrid(grid: Array<CharArray>) {
-        for (row in grid) {
-            println(row.joinToString(""))
-        }
-    }*/
 
     /**
      * Solves Part 2.
