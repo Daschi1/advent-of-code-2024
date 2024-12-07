@@ -1,10 +1,10 @@
 <component name="ProjectRunConfigurationManager">
-  <configuration default="false" name="runSolution 2024 02" type="GradleRunConfiguration" factoryName="Gradle">
+  <configuration default="false" name="runSolution 2024 03" type="GradleRunConfiguration" factoryName="Gradle">
     <ExternalSystemSettings>
       <option name="executionName" />
       <option name="externalProjectPath" value="$PROJECT_DIR$" />
       <option name="externalSystemIdString" value="GRADLE" />
-      <option name="scriptParameters" value="-Pyear=2024 -Pday=02 -Ppart=both -Poutput=both" />
+      <option name="scriptParameters" value="-Pyear=2024 -Pday=03 -Ppart=both -Poutput=both" />
       <option name="taskDescriptions">
         <list />
       </option>
