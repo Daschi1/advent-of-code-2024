@@ -110,7 +110,28 @@ class Day02(
      * Solves Part 2.
      */
     override fun part2(): Any {
-        // TODO: Implement Part 2
-        return -1
+        val safeReports = mutableListOf<IntArray>()
+
+        for (report in parsedInput) {
+            for (i in report.indices) {
+                // Create the partial report by excluding the element at index `i`
+                val partialReport =
+                    report.copyOfRange(0, i) + report.copyOfRange(i + 1, report.size)
+
+                if (!partialReport.isStrictlyMonotonic()) {
+                    continue
+                }
+                if (!partialReport.hasStepDifferenceInRange(1, 3)) {
+                    continue
+                }
+
+                // If a partial report is valid, add the original report to the safeReports list and exit the loop early.
+                // Only one valid partial report is needed to mark the original report as safe.
+                safeReports.add(report)
+                break
+            }
+        }
+
+        return safeReports.size
     }
 }
