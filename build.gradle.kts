@@ -161,7 +161,7 @@ tasks.register("newDay") {
                         @JvmStatic
                         fun part1Samples() = listOf(
                             // sampleNumberToLoad, expectedResult
-                            Arguments.of(1, -1, expectedResult)
+                            Arguments.of(1, -1)
                         )
 
                         @JvmStatic
