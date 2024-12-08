@@ -57,16 +57,13 @@ class Day04(
     }
 
     private fun matchWordInGrid(
-        yStart: Int,
-        xStart: Int,
-        direction: Pair<Int, Int>,
-        word: String
+        yStart: Int, xStart: Int, direction: Pair<Int, Int>, word: String
     ): Boolean {
         val height = parsedInput.size
         val width = parsedInput[0].size
         var y = yStart
         var x = xStart
-        println("y: $y, x: $x, direction: $direction")
+
         for (i in word.indices) {
             if (y !in (0 until height) || x !in (0 until width) || word[i] != parsedInput[y][x]) {
                 return false
@@ -81,63 +78,49 @@ class Day04(
      * Solves Part 2.
      */
     override fun part2(): Any {
-        val directions = mapOf(
-            Pair("down-right", Pair(1, 1)),
-            Pair("up-left", Pair(-1, -1)),
-            Pair("down-left", Pair(1, -1)),
-            Pair("up-right", Pair(-1, 1)),
-        )
-        var result = 0
-
         val height = parsedInput.size
         val width = parsedInput[0].size
-        val word = "MAS"
+        var result = 0
 
         for (y in 0 until height) {
             for (x in 0 until width) {
-                for ((name, direction) in directions) {
-                    if (matchWordInGrid(y, x, direction, word)) {
-                        when (name) {
-                            "down-right" ->
-                                if (
-                                    matchWordInGrid(y + 2, x, directions["up-right"]!!, word) ||
-                                    matchWordInGrid(y, x + 2, directions["down-left"]!!, word)
-                                ) {
-                                    result++
-                                    print("y: $y, x: $x, name: $name")
-                                    if (matchWordInGrid(y + 2, x, directions["up-right"]!!, word)) {
-                                        val toY = y + 2
-                                        val toX = x
-                                        print("; y: $toY, x: $toX, name: up-right")
-                                    }
-                                    if ( matchWordInGrid(y, x + 2, directions["down-left"]!!, word)) {
-                                        val toY = y
-                                        val toX = x + 2
-                                        print("; y: $toY, x: $toX, name: up-right")
-                                    }
-                                    println("---")
-                                }
-
-                            "up-left" -> if (
-                                matchWordInGrid(y - 2, x, directions["down-left"]!!, word) ||
-                                matchWordInGrid(y, x - 2, directions["up-right"]!!, word)
-                            ) result++
-
-                            "down-left" -> if (
-                                matchWordInGrid(y + 2, x, directions["up-left"]!!, word) ||
-                                matchWordInGrid(y, x - 2, directions["down-right"]!!, word)
-                            ) result++
-
-                            "up-right" -> if (
-                                matchWordInGrid(y - 2, x, directions["down-right"]!!, word) ||
-                                matchWordInGrid(y, x + 2, directions["up-left"]!!, word)
-                            ) result++
-                        }
-                    }
+                if (isXMASPattern(y, x)) {
+                    result++
                 }
             }
         }
 
         return result
+    }
+
+    private fun isXMASPattern(y: Int, x: Int): Boolean {
+        val height = parsedInput.size
+        val width = parsedInput[0].size
+
+        // Check bounds for the diagonal lengths
+        if (y - 1 < 0 || y + 1 >= height || x - 1 < 0 || x + 1 >= width) return false
+
+        // Top-left to bottom-right diagonal (\)
+        val diagonal1 = listOf(
+            parsedInput[y - 1][x - 1], // M
+            parsedInput[y][x],         // A
+            parsedInput[y + 1][x + 1]  // S
+        )
+
+        // Top-right to bottom-left diagonal (/)
+        val diagonal2 = listOf(
+            parsedInput[y - 1][x + 1], // M
+            parsedInput[y][x],         // A
+            parsedInput[y + 1][x - 1]  // S
+        )
+
+        // Check if either diagonal forms "MAS" or "SAM"
+        val isDiagonal1Valid =
+            diagonal1 == listOf('M', 'A', 'S') || diagonal1 == listOf('S', 'A', 'M')
+        val isDiagonal2Valid =
+            diagonal2 == listOf('M', 'A', 'S') || diagonal2 == listOf('S', 'A', 'M')
+
+        // Both diagonals must intersect at the middle "A"
+        return isDiagonal1Valid && isDiagonal2Valid
     }
 }
