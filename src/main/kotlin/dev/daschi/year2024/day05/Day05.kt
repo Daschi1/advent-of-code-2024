@@ -43,39 +43,23 @@ class Day05(
     }
 
     private fun getPageUpdateMiddleNumber(pageUpdate: List<Int>): Int {
-        if (pageUpdate.size % 2 == 0) {
-            throw IllegalArgumentException("Size of pageUpdate $pageUpdate must be odd.")
-        }
-        return pageUpdate[(pageUpdate.size - 1) / 2]
+        require(pageUpdate.size % 2 != 0) { "Size of pageUpdate $pageUpdate must be odd." }
+        return pageUpdate[pageUpdate.size / 2]
     }
 
     private fun isPageUpdateValid(pageUpdate: List<Int>): Boolean {
-        var valid = true
-        for (page in pageUpdate) {
-            if (!isPageInValidPosition(pageUpdate, page)) {
-                valid = false
-                break
-            }
-        }
-        return valid
+        return pageUpdate.all { isPageInValidPosition(pageUpdate, it) }
     }
 
     private fun isPageInValidPosition(pageUpdate: List<Int>, page: Int): Boolean {
         val pageIndex = pageUpdate.indexOf(page)
-        if (pageIndex == -1) {
-            throw IllegalArgumentException("Page number '$page' is not present in pageUpdate $pageUpdate.")
-        }
+        require(pageIndex != -1) { "Page number '$page' is not present in pageUpdate $pageUpdate." }
 
         val dependencies = retrieveDependencies(page)
-        for (dependency in dependencies) {
-            if (dependency in pageUpdate) {
-                val dependencyIndex = pageUpdate.indexOf(dependency)
-                if (dependencyIndex >= pageIndex) {
-                    return false
-                }
-            }
+        return dependencies.all { dependency ->
+            val dependencyIndex = pageUpdate.indexOf(dependency)
+            dependencyIndex == -1 || dependencyIndex < pageIndex
         }
-        return true
     }
 
     private fun retrieveDependencies(page: Int): List<Int> {
