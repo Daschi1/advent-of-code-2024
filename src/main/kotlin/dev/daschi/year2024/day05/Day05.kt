@@ -39,11 +39,25 @@ class Day05(
      * Solves Part 1.
      */
     override fun part1(): Any {
-        println(pageOrderingRules)
-        println(pageUpdates)
-        println(retrieveDependencies(29))
-        println(isPageInValidPosition(pageUpdates[0], 29))
-        return -1
+        return pageUpdates.filter(::isPageUpdateValid).map(::getPageUpdateMiddleNumber).sum()
+    }
+
+    private fun getPageUpdateMiddleNumber(pageUpdate: List<Int>): Int {
+        if (pageUpdate.size % 2 == 0) {
+            throw IllegalArgumentException("Size of pageUpdate $pageUpdate must be odd.")
+        }
+        return pageUpdate[(pageUpdate.size - 1) / 2]
+    }
+
+    private fun isPageUpdateValid(pageUpdate: List<Int>): Boolean {
+        var valid = true
+        for (page in pageUpdate) {
+            if (!isPageInValidPosition(pageUpdate, page)) {
+                valid = false
+                break
+            }
+        }
+        return valid
     }
 
     private fun isPageInValidPosition(pageUpdate: List<Int>, page: Int): Boolean {
@@ -53,14 +67,15 @@ class Day05(
         }
 
         val dependencies = retrieveDependencies(page)
-        // Iterate over pages before the position of the target page
-        for (priorPage in pageUpdate.take(pageIndex)) {
-            if (priorPage in dependencies) {
-                // remove?
+        for (dependency in dependencies) {
+            if (dependency in pageUpdate) {
+                val dependencyIndex = pageUpdate.indexOf(dependency)
+                if (dependencyIndex >= pageIndex) {
+                    return false
+                }
             }
         }
-
-        return emptyList()
+        return true
     }
 
     private fun retrieveDependencies(page: Int): List<Int> {
