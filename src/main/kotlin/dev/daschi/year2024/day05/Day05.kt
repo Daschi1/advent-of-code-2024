@@ -70,43 +70,46 @@ class Day05(
      * Solves Part 2.
      */
     override fun part2(): Any {
-        //.slice(4..4)
         return pageUpdates.filterNot(::isPageUpdateValid).map(::reorderPageUpdate)
             .map(::getPageUpdateMiddleNumber).sum()
     }
 
     private fun reorderPageUpdate(pageUpdate: List<Int>): List<Int> {
-        println("pageUpdate: $pageUpdate")
-        val relevantDependencies = mutableMapOf<Int, List<Int>>()
-        for (page in pageUpdate) {
-            val filteredDependencies = getDependencies(page).filter { it in pageUpdate }
-            relevantDependencies[page] = filteredDependencies
+        // Build the dependants map: page -> list of pages that depend on it
+        val relevantDependants = pageUpdate.associateWith { page ->
+            getDependents(page).filter { it in pageUpdate }
         }
-        println("relevantDependencies: $relevantDependencies")
 
-        val relevantDependants = mutableMapOf<Int, List<Int>>()
-        for (page in pageUpdate) {
-            val filteredDependants = getDependents(page).filter { it in pageUpdate }
-            relevantDependants[page] = filteredDependants
+        // Calculate in-degrees: count incoming edges for each page
+        val inDegrees =
+            pageUpdate.associateWith { 0 }.toMutableMap() // Initialize all in-degrees to 0
+        relevantDependants.values.flatten().forEach { dependant ->
+            inDegrees[dependant] =
+                inDegrees.getValue(dependant) + 1 // Increment in-degree for each dependant
         }
-        println("relevantDependants: $relevantDependants")
 
-        val inDegrees = mutableMapOf<Int, Int>()
-        relevantDependants.keys.forEach { inDegrees[it] = 0 }
-        relevantDependants.values.flatten().forEach { inDegrees[it] = inDegrees[it]!! + 1 }
-        println("inDegrees: $inDegrees")
+        // Perform topological sort
+        return topologicalSort(relevantDependants, inDegrees)
+    }
 
+    /**
+     * Performs topological sort on the given update using dependants and in-degrees.
+     */
+    private fun topologicalSort(
+        relevantDependants: Map<Int, List<Int>>, inDegrees: MutableMap<Int, Int>
+    ): List<Int> {
         val sortedOrder = mutableListOf<Int>()
         val queue = ArrayDeque<Int>()
 
-        // Start with all nodes with in-degree = 0
+        // Add all nodes with in-degree = 0 to the queue
         inDegrees.filter { it.value == 0 }.keys.forEach { queue.add(it) }
 
+        // Process nodes in the queue
         while (queue.isNotEmpty()) {
-            val current = queue.removeFirst()
-            sortedOrder.add(current)
+            val current = queue.removeFirst() // Get the next node to process
+            sortedOrder.add(current) // Add it to the sorted order
 
-            // Decrease the in-degree of all dependants
+            // Reduce in-degree for all dependants and add them to the queue if their in-degree becomes 0
             for (dependant in relevantDependants[current] ?: emptyList()) {
                 val newInDegree = inDegrees.getValue(dependant) - 1
                 inDegrees[dependant] = newInDegree
@@ -115,7 +118,6 @@ class Day05(
                 }
             }
         }
-        println("sortedOrder: $sortedOrder")
 
         return sortedOrder
     }
