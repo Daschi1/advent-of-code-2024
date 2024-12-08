@@ -21,7 +21,7 @@ class Day05Test {
         @JvmStatic
         fun part2Samples() = listOf(
             // sampleNumberToLoad, expectedResult
-            Arguments.of(1, -1)
+            Arguments.of(1, 123)
         )
     }
 

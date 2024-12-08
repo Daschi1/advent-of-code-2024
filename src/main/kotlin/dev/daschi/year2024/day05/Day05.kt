@@ -55,14 +55,14 @@ class Day05(
         val pageIndex = pageUpdate.indexOf(page)
         require(pageIndex != -1) { "Page number '$page' is not present in pageUpdate $pageUpdate." }
 
-        val dependencies = retrieveDependencies(page)
+        val dependencies = getDependencies(page)
         return dependencies.all { dependency ->
             val dependencyIndex = pageUpdate.indexOf(dependency)
             dependencyIndex == -1 || dependencyIndex < pageIndex
         }
     }
 
-    private fun retrieveDependencies(page: Int): List<Int> {
+    private fun getDependencies(page: Int): List<Int> {
         return pageOrderingRules.filter { it.dependent == page }.map { it.dependency }
     }
 
@@ -70,7 +70,57 @@ class Day05(
      * Solves Part 2.
      */
     override fun part2(): Any {
-        // TODO: Implement Part 2
-        return -1
+        //.slice(4..4)
+        return pageUpdates.filterNot(::isPageUpdateValid).map(::reorderPageUpdate)
+            .map(::getPageUpdateMiddleNumber).sum()
+    }
+
+    private fun reorderPageUpdate(pageUpdate: List<Int>): List<Int> {
+        println("pageUpdate: $pageUpdate")
+        val relevantDependencies = mutableMapOf<Int, List<Int>>()
+        for (page in pageUpdate) {
+            val filteredDependencies = getDependencies(page).filter { it in pageUpdate }
+            relevantDependencies[page] = filteredDependencies
+        }
+        println("relevantDependencies: $relevantDependencies")
+
+        val relevantDependants = mutableMapOf<Int, List<Int>>()
+        for (page in pageUpdate) {
+            val filteredDependants = getDependents(page).filter { it in pageUpdate }
+            relevantDependants[page] = filteredDependants
+        }
+        println("relevantDependants: $relevantDependants")
+
+        val inDegrees = mutableMapOf<Int, Int>()
+        relevantDependants.keys.forEach { inDegrees[it] = 0 }
+        relevantDependants.values.flatten().forEach { inDegrees[it] = inDegrees[it]!! + 1 }
+        println("inDegrees: $inDegrees")
+
+        val sortedOrder = mutableListOf<Int>()
+        val queue = ArrayDeque<Int>()
+
+        // Start with all nodes with in-degree = 0
+        inDegrees.filter { it.value == 0 }.keys.forEach { queue.add(it) }
+
+        while (queue.isNotEmpty()) {
+            val current = queue.removeFirst()
+            sortedOrder.add(current)
+
+            // Decrease the in-degree of all dependants
+            for (dependant in relevantDependants[current] ?: emptyList()) {
+                val newInDegree = inDegrees.getValue(dependant) - 1
+                inDegrees[dependant] = newInDegree
+                if (newInDegree == 0) {
+                    queue.add(dependant)
+                }
+            }
+        }
+        println("sortedOrder: $sortedOrder")
+
+        return sortedOrder
+    }
+
+    private fun getDependents(page: Int): List<Int> {
+        return pageOrderingRules.filter { it.dependency == page }.map { it.dependent }
     }
 }
