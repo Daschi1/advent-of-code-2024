@@ -87,10 +87,6 @@ class Day06(
      */
     override fun part2(): Any {
         val potentialLoops = calculatePotentialLoops()
-        println(potentialLoops)
-        println(potentialLoops.size)
-        println(potentialLoops.distinct())
-        println(potentialLoops.distinct().size)
         return potentialLoops.distinct().size
     }
 
@@ -105,37 +101,14 @@ class Day06(
                 continue
             }
             charGrid.set(step.first, step.second, '#')
-            charGrid.printGrid()
-            println("y: ${step.first}, x: ${step.second}")
+
             try {
-                val modifiedPath = predictGuardPath()
-
-                // Map directions to arrow symbols
-                val directionToArrow = mapOf(
-                    CharGrid.Direction.UP to '^',
-                    CharGrid.Direction.RIGHT to '>',
-                    CharGrid.Direction.DOWN to 'v',
-                    CharGrid.Direction.LEFT to '<'
-                )
-
-//                // Print grid with arrows
-//                charGrid.forEach { y, x, char ->
-//                    var charToPrint = char
-//                    modifiedPath.find { it.first == y && it.second == x }
-//                        ?.let { (_, _, direction) ->
-//                            charToPrint =
-//                                directionToArrow[direction] ?: 'X' // Get arrow for direction
-//                        }
-//                    if (char == '^') charToPrint = 'S'
-//                    print(charToPrint)
-//                    if (x == charGrid.width - 1) print('\n')
-//                }
+                predictGuardPath()
             } catch (ignored: IllegalStateException) {
-                println(ignored.message)
                 result.add(Pair(step.first, step.second))
             }
+
             charGrid.set(step.first, step.second, oldChar)
-            println("----------------------")
         }
 
         return result
