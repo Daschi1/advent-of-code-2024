@@ -36,6 +36,22 @@ class CharGrid(lines: List<String>) {
     }
 
     /**
+     * Finds all positions of the specified character in the grid.
+     *
+     * @param char The character to search for.
+     * @return A list of pairs (y, x) where the character is found, or an empty list if not found.
+     */
+    fun findPositions(char: Char): List<Pair<Int, Int>> {
+        val positions = mutableListOf<Pair<Int, Int>>()
+        forEach { y, x, gridChar ->
+            if (gridChar == char) {
+                positions.add(y to x)
+            }
+        }
+        return positions
+    }
+
+    /**
      * Checks if the specified position is within the grid bounds.
      *
      * @param y The row index.
