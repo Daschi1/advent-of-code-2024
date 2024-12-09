@@ -78,7 +78,19 @@ class Day06(
      * Solves Part 2.
      */
     override fun part2(): Any {
-        // TODO: Implement Part 2
+        val guardPath = predictGuardPath()
+
+        // Group by x and y (first two elements) while preserving the direction
+        val groupedByPosition = guardPath.groupBy { it.first to it.second }
+
+        // Filter for duplicate positions and preserve the direction
+        val distinctDuplicates =
+            groupedByPosition.filter { it.value.size > 1 } // Keep only (x, y) positions with duplicates
+                .flatMap { it.value } // Flatten the resulting lists of Triples
+
+        println("guardPath: $guardPath")
+        println("groupedByPosition: $groupedByPosition")
+        println("distinctDuplicates: $distinctDuplicates")
         return -1
     }
 }
