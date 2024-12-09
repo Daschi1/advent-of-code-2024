@@ -26,14 +26,11 @@ class CharGrid(lines: List<String>) {
      * Enum representing movement directions in the grid with corresponding row and column deltas.
      */
     enum class Direction(val deltaY: Int, val deltaX: Int) {
-        UP(-1, 0),
-        DOWN(1, 0),
-        LEFT(0, -1),
-        RIGHT(0, 1),
-        UP_LEFT(-1, -1),
-        UP_RIGHT(-1, 1),
-        DOWN_LEFT(1, -1),
-        DOWN_RIGHT(1, 1)
+        UP(-1, 0), DOWN(1, 0), LEFT(0, -1), RIGHT(0, 1), UP_LEFT(-1, -1), UP_RIGHT(
+            -1,
+            1
+        ),
+        DOWN_LEFT(1, -1), DOWN_RIGHT(1, 1)
     }
 
     /**
@@ -47,6 +44,19 @@ class CharGrid(lines: List<String>) {
     fun get(y: Int, x: Int): Char {
         assertInsideBounds(y, x)
         return grid[y][x]
+    }
+
+    /**
+     * Sets the character at the specified position.
+     *
+     * @param y The row index.
+     * @param x The column index.
+     * @return The character to set at the specified position.
+     * @throws IndexOutOfBoundsException if the position is out of bounds.
+     */
+    fun set(y: Int, x: Int, char: Char) {
+        assertInsideBounds(y, x)
+        grid[y][x] = char
     }
 
     /**
