@@ -32,9 +32,13 @@ class Day06(
 
     private fun predictGuardPath(): List<Triple<Int, Int, CharGrid.Direction>> {
         val guardPath = mutableListOf<Triple<Int, Int, CharGrid.Direction>>()
+        val visited =
+            mutableSetOf<Pair<Pair<Int, Int>, CharGrid.Direction>>() // To store visited positions with directions
+
         var currentDirection = CharGrid.Direction.UP
         var (currentY, currentX) = charGrid.findPositions('^').first()
         guardPath.add(Triple(currentY, currentX, currentDirection)) // Add the starting position
+        visited.add(Pair(Pair(currentY, currentX), currentDirection)) // Mark as visited
 
         var predict = true
         while (predict) {
@@ -47,6 +51,10 @@ class Day06(
                         // Add new position to path
                         currentY = nextY
                         currentX = nextX
+                        val currentState = Pair(Pair(currentY, currentX), currentDirection)
+                        if (!visited.add(currentState)) {
+                            throw IllegalStateException("Loop detected at position (y: $currentY, x: $currentX) facing $currentDirection.")
+                        }
                         guardPath.add(Triple(currentY, currentX, currentDirection))
                     }
 
@@ -78,19 +86,58 @@ class Day06(
      * Solves Part 2.
      */
     override fun part2(): Any {
-        val guardPath = predictGuardPath()
-
-        // Group by x and y (first two elements) while preserving the direction
-        val groupedByPosition = guardPath.groupBy { it.first to it.second }
-
-        // Filter for duplicate positions and preserve the direction
-        val distinctDuplicates =
-            groupedByPosition.filter { it.value.size > 1 } // Keep only (x, y) positions with duplicates
-                .flatMap { it.value } // Flatten the resulting lists of Triples
-
-        println("guardPath: $guardPath")
-        println("groupedByPosition: $groupedByPosition")
-        println("distinctDuplicates: $distinctDuplicates")
+        val potentialLoops = calculatePotentialLoops()
+        println(potentialLoops)
+        println(potentialLoops.size)
+        println(potentialLoops.distinct())
+        println(potentialLoops.distinct().size)
         return -1
+    }
+
+    private fun calculatePotentialLoops(): List<Pair<Int, Int>> {
+        val result = mutableListOf<Pair<Int, Int>>()
+        val originalGuardPath = predictGuardPath()
+
+        for (step in originalGuardPath) {
+            val oldChar = charGrid.get(step.first, step.second)
+            if (oldChar == '^') {
+                // Placing an obstacle at the start is not allowed
+                continue
+            }
+            charGrid.set(step.first, step.second, '#')
+            charGrid.printGrid()
+            println("y: ${step.first}, x: ${step.second}")
+            try {
+                val modifiedPath = predictGuardPath()
+                result.add(Pair(step.first, step.second))
+
+                // Map directions to arrow symbols
+                val directionToArrow = mapOf(
+                    CharGrid.Direction.UP to '^',
+                    CharGrid.Direction.RIGHT to '>',
+                    CharGrid.Direction.DOWN to 'v',
+                    CharGrid.Direction.LEFT to '<'
+                )
+
+                // Print grid with arrows
+                charGrid.forEach { y, x, char ->
+                    var charToPrint = char
+                    modifiedPath.find { it.first == y && it.second == x }
+                        ?.let { (_, _, direction) ->
+                            charToPrint =
+                                directionToArrow[direction] ?: 'X' // Get arrow for direction
+                        }
+                    if (char == '^') charToPrint = 'S'
+                    print(charToPrint)
+                    if (x == charGrid.width - 1) print('\n')
+                }
+            } catch (ignored: IllegalStateException) {
+                println(ignored.message)
+            }
+            charGrid.set(step.first, step.second, oldChar)
+            println("----------------------")
+        }
+
+        return result
     }
 }
