@@ -22,12 +22,18 @@ class CharGrid(lines: List<String>) {
         grid = Array(height) { y -> lines[y].toCharArray() }
     }
 
+    /**
+     * Enum representing movement directions in the grid with corresponding row and column deltas.
+     */
     enum class Direction(val deltaY: Int, val deltaX: Int) {
-        UP(-1, 0), DOWN(1, 0), LEFT(0, -1), RIGHT(0, 1), UP_LEFT(-1, -1), UP_RIGHT(
-            -1,
-            1
-        ),
-        DOWN_LEFT(1, -1), DOWN_RIGHT(1, 1)
+        UP(-1, 0),
+        DOWN(1, 0),
+        LEFT(0, -1),
+        RIGHT(0, 1),
+        UP_LEFT(-1, -1),
+        UP_RIGHT(-1, 1),
+        DOWN_LEFT(1, -1),
+        DOWN_RIGHT(1, 1)
     }
 
     /**
@@ -41,6 +47,22 @@ class CharGrid(lines: List<String>) {
     fun get(y: Int, x: Int): Char {
         assertInsideBounds(y, x)
         return grid[y][x]
+    }
+
+    /**
+     * Moves in the given direction from the starting position (y, x) and returns the character at the new position.
+     *
+     * @param y The starting row index.
+     * @param x The starting column index.
+     * @param direction The direction to move in.
+     * @return The character at the new position.
+     * @throws IndexOutOfBoundsException if the move goes out of bounds.
+     */
+    fun moveAndGet(y: Int, x: Int, direction: Direction): Char {
+        val newY = y + direction.deltaY
+        val newX = x + direction.deltaX
+        assertInsideBounds(newY, newX)
+        return grid[newY][newX]
     }
 
     /**
@@ -91,7 +113,14 @@ class CharGrid(lines: List<String>) {
     fun getRawArray(): Array<CharArray> = grid
 
     /**
-     * Private helper method to check if a position is within bounds.
+     * Prints the grid to the console in a human-readable format.
+     */
+    fun printGrid() {
+        grid.forEach { row -> println(row.joinToString("")) }
+    }
+
+    /**
+     * Checks if a position is within bounds and throws an exception if it is not.
      *
      * @param y The row index.
      * @param x The column index.
@@ -101,28 +130,5 @@ class CharGrid(lines: List<String>) {
         if (!isInBounds(y, x)) {
             throw IndexOutOfBoundsException("Position (y: $y, x: $x) is out of bounds.")
         }
-    }
-
-    /**
-     * Prints the grid to the console in a human-readable format.
-     */
-    fun printGrid() {
-        grid.forEach { row -> println(row.joinToString("")) }
-    }
-
-    /**
-     * Moves in the given direction from the starting position (y, x) and returns the character at the new position.
-     *
-     * @param y The starting row index.
-     * @param x The starting column index.
-     * @param direction The direction to move in.
-     * @return The character at the new position.
-     * @throws IndexOutOfBoundsException if the move goes out of bounds.
-     */
-    fun moveAndGet(y: Int, x: Int, direction: Direction): Char {
-        val newY = y + direction.deltaY
-        val newX = x + direction.deltaX
-        assertInsideBounds(newY, newX)
-        return grid[newY][newX]
     }
 }
