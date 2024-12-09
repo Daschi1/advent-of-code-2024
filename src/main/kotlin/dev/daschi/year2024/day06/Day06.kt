@@ -91,7 +91,7 @@ class Day06(
         println(potentialLoops.size)
         println(potentialLoops.distinct())
         println(potentialLoops.distinct().size)
-        return -1
+        return potentialLoops.distinct().size
     }
 
     private fun calculatePotentialLoops(): List<Pair<Int, Int>> {
@@ -109,7 +109,6 @@ class Day06(
             println("y: ${step.first}, x: ${step.second}")
             try {
                 val modifiedPath = predictGuardPath()
-                result.add(Pair(step.first, step.second))
 
                 // Map directions to arrow symbols
                 val directionToArrow = mapOf(
@@ -119,20 +118,21 @@ class Day06(
                     CharGrid.Direction.LEFT to '<'
                 )
 
-                // Print grid with arrows
-                charGrid.forEach { y, x, char ->
-                    var charToPrint = char
-                    modifiedPath.find { it.first == y && it.second == x }
-                        ?.let { (_, _, direction) ->
-                            charToPrint =
-                                directionToArrow[direction] ?: 'X' // Get arrow for direction
-                        }
-                    if (char == '^') charToPrint = 'S'
-                    print(charToPrint)
-                    if (x == charGrid.width - 1) print('\n')
-                }
+//                // Print grid with arrows
+//                charGrid.forEach { y, x, char ->
+//                    var charToPrint = char
+//                    modifiedPath.find { it.first == y && it.second == x }
+//                        ?.let { (_, _, direction) ->
+//                            charToPrint =
+//                                directionToArrow[direction] ?: 'X' // Get arrow for direction
+//                        }
+//                    if (char == '^') charToPrint = 'S'
+//                    print(charToPrint)
+//                    if (x == charGrid.width - 1) print('\n')
+//                }
             } catch (ignored: IllegalStateException) {
                 println(ignored.message)
+                result.add(Pair(step.first, step.second))
             }
             charGrid.set(step.first, step.second, oldChar)
             println("----------------------")
