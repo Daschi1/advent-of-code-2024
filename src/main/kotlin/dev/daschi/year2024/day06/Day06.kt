@@ -1,5 +1,6 @@
 package dev.daschi.year2024.day06
 
+import dev.daschi.util.CharGrid
 import dev.daschi.util.Input
 import dev.daschi.util.Solution
 
@@ -12,10 +13,10 @@ class Day06(
     override val year = 2024
     override val day = 6
 
-    private val parsedInput = parseInput(input)
+    private val charGrid = parseInput(input)
 
-    private fun parseInput(input: List<String>): List<String> {
-        return input
+    private fun parseInput(input: List<String>): CharGrid {
+        return CharGrid(input)
     }
 
     /**
