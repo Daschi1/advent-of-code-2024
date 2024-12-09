@@ -31,19 +31,6 @@ object Input {
     fun readText(year: Int, day: Int, sampleNumber: Int? = null): String =
         getInputStream(year, day, sampleNumber).bufferedReader().readText()
 
-    /**
-     * Converts a list of strings into a 2D character array.
-     *
-     * @param lines The list of strings, where each string represents a row of characters.
-     * @return A 2D character array where the outer array represents rows (height) and
-     * the inner arrays represent columns (width).
-     */
-    fun convertTo2DCharArray(lines: List<String>): Array<CharArray> {
-        return Array(lines.size) { y ->
-            lines[y].toCharArray()
-        }
-    }
-
     private fun getInputStream(year: Int, day: Int, sampleNumber: Int?): InputStream {
         val fileName = fileName(year, day, sampleNumber)
         val resourcePath = if (sampleNumber == null) {
