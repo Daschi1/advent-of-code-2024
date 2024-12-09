@@ -50,6 +50,22 @@ class CharGrid(lines: List<String>) {
     }
 
     /**
+     * Moves in the given direction from the starting position (y, x) and returns the new coordinates.
+     *
+     * @param y The starting row index.
+     * @param x The starting column index.
+     * @param direction The direction to move in.
+     * @return A pair of the new row and column coordinates.
+     * @throws IndexOutOfBoundsException if the move goes out of bounds.
+     */
+    fun moveTo(y: Int, x: Int, direction: Direction): Pair<Int, Int> {
+        val newY = y + direction.deltaY
+        val newX = x + direction.deltaX
+        assertInsideBounds(newY, newX)
+        return newY to newX
+    }
+
+    /**
      * Moves in the given direction from the starting position (y, x) and returns the character at the new position.
      *
      * @param y The starting row index.
@@ -59,10 +75,8 @@ class CharGrid(lines: List<String>) {
      * @throws IndexOutOfBoundsException if the move goes out of bounds.
      */
     fun moveAndGet(y: Int, x: Int, direction: Direction): Char {
-        val newY = y + direction.deltaY
-        val newX = x + direction.deltaX
-        assertInsideBounds(newY, newX)
-        return grid[newY][newX]
+        val (newY, newX) = moveTo(y, x, direction)
+        return get(newY, newX)
     }
 
     /**
