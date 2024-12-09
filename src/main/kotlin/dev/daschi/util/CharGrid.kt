@@ -22,6 +22,14 @@ class CharGrid(lines: List<String>) {
         grid = Array(height) { y -> lines[y].toCharArray() }
     }
 
+    enum class Direction(val deltaY: Int, val deltaX: Int) {
+        UP(-1, 0), DOWN(1, 0), LEFT(0, -1), RIGHT(0, 1), UP_LEFT(-1, -1), UP_RIGHT(
+            -1,
+            1
+        ),
+        DOWN_LEFT(1, -1), DOWN_RIGHT(1, 1)
+    }
+
     /**
      * Returns the character at the specified position.
      *
@@ -100,5 +108,21 @@ class CharGrid(lines: List<String>) {
      */
     fun printGrid() {
         grid.forEach { row -> println(row.joinToString("")) }
+    }
+
+    /**
+     * Moves in the given direction from the starting position (y, x) and returns the character at the new position.
+     *
+     * @param y The starting row index.
+     * @param x The starting column index.
+     * @param direction The direction to move in.
+     * @return The character at the new position.
+     * @throws IndexOutOfBoundsException if the move goes out of bounds.
+     */
+    fun moveAndGet(y: Int, x: Int, direction: Direction): Char {
+        val newY = y + direction.deltaY
+        val newX = x + direction.deltaX
+        assertInsideBounds(newY, newX)
+        return grid[newY][newX]
     }
 }
