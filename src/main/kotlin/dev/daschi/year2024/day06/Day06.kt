@@ -23,74 +23,45 @@ class Day06(
      * Solves Part 1.
      */
     override fun part1(): Any {
-        charGrid.printGrid()
-        println(charGrid.findPositions('^'))
-        println(charGrid.height)
-        println(charGrid.width)
         val guardPath = predictGuardPath()
-        println(guardPath)
-        println(guardPath.size)
-        println(guardPath.distinct())
-        println(guardPath.distinct().size)
-        return guardPath.distinct().size
+
+        // Make distinct positions based only on coordinates (ignoring direction)
+        val distinctPositions = guardPath.map { it.first to it.second }.distinct()
+        return distinctPositions.size
     }
 
-    private fun predictGuardPath(): List<Pair<Int, Int>> {
+    private fun predictGuardPath(): List<Triple<Int, Int, CharGrid.Direction>> {
         val guardPath = mutableListOf<Triple<Int, Int, CharGrid.Direction>>()
         var currentDirection = CharGrid.Direction.UP
         var (currentY, currentX) = charGrid.findPositions('^').first()
-        guardPath.add(Triple(currentY, currentX, currentDirection))
+        guardPath.add(Triple(currentY, currentX, currentDirection)) // Add the starting position
+
         var predict = true
-
-        println("Starting predictGuardPath")
-        println("Initial position: (currentY=$currentY, currentX=$currentX), Initial direction: $currentDirection")
-
         while (predict) {
             try {
-                println("\nAttempting to move from (currentY=$currentY, currentX=$currentX) in direction: $currentDirection")
                 val (nextY, nextX) = charGrid.moveTo(currentY, currentX, currentDirection)
                 val nextTile = charGrid.get(nextY, nextX)
-                println("Moved to (nextY=$nextY, nextX=$nextX), Tile: $nextTile")
 
                 when (nextTile) {
                     '.', '^' -> {
-                        guardPath.add(Triple(nextY, nextX, currentDirection)) // Add direction
-                        println("Added to path: ($nextY, $nextX) with direction: $currentDirection")
+                        // Add new position to path
                         currentY = nextY
                         currentX = nextX
+                        guardPath.add(Triple(currentY, currentX, currentDirection))
                     }
 
                     '#' -> {
+                        // Turn right on obstacle
                         currentDirection = turnToRight(currentDirection)
-                        println("Hit wall (#), turning to new direction: $currentDirection")
                     }
                 }
             } catch (e: IndexOutOfBoundsException) {
-                println("Out of bounds exception encountered. Stopping prediction.")
+                // Stop prediction when out of bounds
                 predict = false
             }
         }
 
-        // Map directions to arrow symbols
-        val directionToArrow = mapOf(
-            CharGrid.Direction.UP to '^',
-            CharGrid.Direction.RIGHT to '>',
-            CharGrid.Direction.DOWN to 'v',
-            CharGrid.Direction.LEFT to '<'
-        )
-
-        // Print grid with arrows
-        charGrid.forEach { y, x, char ->
-            var charToPrint = char
-            guardPath.find { it.first == y && it.second == x }?.let { (_, _, direction) ->
-                charToPrint = directionToArrow[direction] ?: 'X' // Get arrow for direction
-            }
-            if (x == charGrid.width - 1) charToPrint = '\n'
-            if (char == '^') charToPrint = 'S'
-            print(charToPrint)
-        }
-        println("Final guardPath: $guardPath")
-        return guardPath.map { it.first to it.second } // Return positions only
+        return guardPath
     }
 
     private fun turnToRight(direction: CharGrid.Direction): CharGrid.Direction {
