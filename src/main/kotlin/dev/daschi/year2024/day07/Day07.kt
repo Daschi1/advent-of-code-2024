@@ -28,7 +28,7 @@ class Day07(
     private data class Equation(val result: Long, val numbers: List<Long>)
 
     private enum class Operator {
-        PLUS, MULTIPLY
+        PLUS, MULTIPLY, CONCATENATION
     }
 
     /**
@@ -36,6 +36,14 @@ class Day07(
      */
     override fun part1(): Any {
         val availableOperators = listOf(Operator.PLUS, Operator.MULTIPLY)
+        return equations.filter { isEquationSolvable(it, availableOperators) }.sumOf { it.result }
+    }
+
+    /**
+     * Solves Part 2.
+     */
+    override fun part2(): Any {
+        val availableOperators = listOf(Operator.PLUS, Operator.MULTIPLY, Operator.CONCATENATION)
         return equations.filter { isEquationSolvable(it, availableOperators) }.sumOf { it.result }
     }
 
@@ -128,17 +136,10 @@ class Day07(
             when (operators[i - 1]) {
                 Operator.PLUS -> result += right
                 Operator.MULTIPLY -> result *= right
+                Operator.CONCATENATION -> result = "$result$right".toLong()
             }
         }
 
         return result == equation.result
-    }
-
-    /**
-     * Solves Part 2.
-     */
-    override fun part2(): Any {
-        // TODO: Implement Part 2
-        return -1
     }
 }
