@@ -3,7 +3,6 @@ package dev.daschi.year2024.day08
 import dev.daschi.util.CharGrid
 import dev.daschi.util.Input
 import dev.daschi.util.Solution
-import kotlin.math.abs
 
 /**
  * Solution for Day 8 of Advent of Code 2024.
@@ -24,104 +23,59 @@ class Day08(
      * Solves Part 1.
      */
     override fun part1(): Any {
-        grid.printGrid()
-        println(calculateAntinodes())
-        return -1
+        val antinodes = calculateAntinodes()
+        return antinodes.size
     }
 
     /**
-     * Calculates all positions of antinodes on the grid.
-     * Antinodes are points aligned with two antennas of the same frequency,
-     * where one antenna is twice as far from the point as the other.
+     * Retrieves all unique antinodes from the grid.
      *
-     * @return A list of all (y, x) positions of antinodes, including duplicates.
+     * @return A list of distinct (row, col) positions of antinodes within grid bounds.
      */
     private fun calculateAntinodes(): List<Pair<Int, Int>> {
-        val allAntinodes = mutableListOf<Pair<Int, Int>>() // List to collect all antinodes
+        val allAntinodes = mutableListOf<Pair<Int, Int>>()
 
-        // Iterate over all unique frequencies present in the grid
+        // Iterate through all unique frequencies in the grid
         getFrequencies().forEach { frequency ->
-            // Find all positions of antennas with the current frequency
-            val antennaPositions = grid.findPositions(frequency)
+            val positions = grid.findPositions(frequency)
 
-            // Check all pairs of antennas for potential antinodes
-            antennaPositions.forEachPair { antenna1, antenna2 ->
-                println("pair: $antenna1, $antenna2; arePositionsAligned: ${arePositionsAligned(antenna1, antenna2)}")
-                // Ensure the two antennas are aligned
-                if (arePositionsAligned(antenna1, antenna2)) {
-                    // Calculate the potential antinodes
-                    val (antinode1, antinode2) = calculatePotentialAntinodes(antenna1, antenna2)
-
-                    // Add antinodes to the list if they are valid
-                    if (isAntinodeValid(antinode1, antenna1, antenna2)) allAntinodes.add(antinode1)
-                    if (isAntinodeValid(antinode2, antenna1, antenna2)) allAntinodes.add(antinode2)
-                }
+            // For each pair of antennas of the same frequency, calculate potential antinodes
+            positions.forEachPair { antenna1, antenna2 ->
+                val offset = calculateVectorOffset(antenna1, antenna2)
+                allAntinodes.addAll(calculateAntinodePositions(antenna1, antenna2, offset))
             }
         }
 
-        return allAntinodes // Return all collected antinodes
+        // Filter unique antinodes within bounds
+        return allAntinodes.distinct().filter { grid.isInBounds(it.first, it.second) }
     }
 
     /**
-     * Determines if two positions are aligned either horizontally, vertically, or diagonally.
+     * Calculates the vector offset between two antenna positions.
      *
-     * @param pos1 The first position as a pair (y, x).
-     * @param pos2 The second position as a pair (y, x).
-     * @return True if the positions are aligned, false otherwise.
+     * @param pos1 First antenna position (row, col).
+     * @param pos2 Second antenna position (row, col).
+     * @return The offset vector (rowOffset, colOffset).
      */
-    private fun arePositionsAligned(pos1: Pair<Int, Int>, pos2: Pair<Int, Int>): Boolean {
-        return true
-        return pos1.second == pos2.second || // Same column (vertical alignment)
-                pos1.first == pos2.first || // Same row (horizontal alignment)
-                abs(pos1.first - pos2.first) == abs(pos1.second - pos2.second) // Diagonal alignment
+    private fun calculateVectorOffset(pos1: Pair<Int, Int>, pos2: Pair<Int, Int>): Pair<Int, Int> {
+        return Pair(pos1.first - pos2.first, pos1.second - pos2.second)
     }
 
     /**
-     * Calculates two potential antinode positions for a pair of aligned antennas.
+     * Calculates potential antinode positions for a pair of antennas and their offset vector.
      *
-     * @param antenna1 The first antenna's position as a pair (y, x).
-     * @param antenna2 The second antenna's position as a pair (y, x).
-     * @return A pair of antinode positions as pairs (y, x).
+     * @param antenna1 First antenna position (row, col).
+     * @param antenna2 Second antenna position (row, col).
+     * @param offset The vector offset between the two antennas.
+     * @return A list of two potential antinode positions.
      */
-    private fun calculatePotentialAntinodes(
-        antenna1: Pair<Int, Int>, antenna2: Pair<Int, Int>
-    ): Pair<Pair<Int, Int>, Pair<Int, Int>> {
-        val midY = (antenna1.first + antenna2.first) / 2 // Midpoint y-coordinate
-        val midX = (antenna1.second + antenna2.second) / 2 // Midpoint x-coordinate
-
-        // Calculate antinodes based on the midpoint
-        val antinode1 = Pair(midY - (antenna1.first - midY), midX - (antenna1.second - midX))
-        val antinode2 = Pair(midY + (antenna2.first - midY), midX + (antenna2.second - midX))
-        return Pair(antinode1, antinode2)
-    }
-
-    /**
-     * Validates if a candidate antinode satisfies the 2:1 distance condition relative to two antennas.
-     *
-     * @param candidate The candidate antinode position as a pair (y, x).
-     * @param antenna1 The first antenna's position as a pair (y, x).
-     * @param antenna2 The second antenna's position as a pair (y, x).
-     * @return True if the candidate is a valid antinode, false otherwise.
-     */
-    private fun isAntinodeValid(
-        candidate: Pair<Int, Int>, antenna1: Pair<Int, Int>, antenna2: Pair<Int, Int>
-    ): Boolean {
-        val distanceToAntenna1 = calculateManhattanDistance(candidate, antenna1)
-        val distanceToAntenna2 = calculateManhattanDistance(candidate, antenna2)
-
-        // Check if the 2:1 ratio condition is satisfied
-        return distanceToAntenna1 == 2 * distanceToAntenna2 || distanceToAntenna2 == 2 * distanceToAntenna1
-    }
-
-    /**
-     * Calculates the Manhattan distance between two positions.
-     *
-     * @param pos1 The first position as a pair (y, x).
-     * @param pos2 The second position as a pair (y, x).
-     * @return The Manhattan distance between the two positions.
-     */
-    private fun calculateManhattanDistance(pos1: Pair<Int, Int>, pos2: Pair<Int, Int>): Int {
-        return abs(pos1.first - pos2.first) + abs(pos1.second - pos2.second)
+    private fun calculateAntinodePositions(
+        antenna1: Pair<Int, Int>, antenna2: Pair<Int, Int>, offset: Pair<Int, Int>
+    ): List<Pair<Int, Int>> {
+        return listOf(
+            Pair(antenna1.first + offset.first, antenna1.second + offset.second),
+            Pair(antenna2.first - offset.first, antenna2.second - offset.second)
+        )
     }
 
     /**
@@ -146,7 +100,7 @@ class Day08(
      */
     private fun <T> List<T>.forEachPair(action: (T, T) -> Unit) {
         for (i in 0 until this.size - 1) {
-            for (j in i + 1 until this.size) { // Iterate over pairs without repeating
+            for (j in i + 1 until this.size) {
                 action(this[i], this[j])
             }
         }
