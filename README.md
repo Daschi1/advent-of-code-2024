@@ -1,6 +1,6 @@
-# Using Advent of Code Kotlin Framework
+# Advent of Code 2024 using custom AoC Kotlin Framework
 
-This is a Kotlin framework for solving [Advent of Code](https://adventofcode.com/) puzzles. It
+This uses a custom Kotlin framework for solving [Advent of Code](https://adventofcode.com/) puzzles. It
 supports:
 
 - **Multi-Year Solutions**: Organize solutions by year.
