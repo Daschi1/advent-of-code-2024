@@ -3,6 +3,8 @@ package dev.daschi.year2024.day08
 import dev.daschi.util.CharGrid
 import dev.daschi.util.Input
 import dev.daschi.util.Solution
+import kotlin.math.abs
+import kotlin.math.min
 
 /**
  * Solution for Day 8 of Advent of Code 2024.
@@ -23,31 +25,86 @@ class Day08(
      * Solves Part 1.
      */
     override fun part1(): Any {
-        val antinodes = calculateAntinodes()
+        val antinodes = calculateAntinodesPart1()
         return antinodes.size
     }
 
     /**
-     * Retrieves all unique antinodes from the grid.
-     *
-     * @return A list of distinct (row, col) positions of antinodes within grid bounds.
+     * Solves Part 2.
      */
-    private fun calculateAntinodes(): List<Pair<Int, Int>> {
+    override fun part2(): Any {
+        val antinodes = calculateAntinodesPart2()
+        return antinodes.size
+    }
+
+    /**
+     * Part 1: Calculates all antinodes based on the original rules.
+     *
+     * @return A list of distinct (y, x) positions of antinodes within grid bounds.
+     */
+    private fun calculateAntinodesPart1(): List<Pair<Int, Int>> {
         val allAntinodes = mutableListOf<Pair<Int, Int>>()
 
-        // Iterate through all unique frequencies in the grid
         getFrequencies().forEach { frequency ->
             val positions = grid.findPositions(frequency)
-
-            // For each pair of antennas of the same frequency, calculate potential antinodes
             positions.forEachPair { antenna1, antenna2 ->
                 val offset = calculateVectorOffset(antenna1, antenna2)
                 allAntinodes.addAll(calculateAntinodePositions(antenna1, antenna2, offset))
             }
         }
 
-        // Filter unique antinodes within bounds
         return allAntinodes.distinct().filter { grid.isInBounds(it.first, it.second) }
+    }
+
+    /**
+     * Part 2: Calculates all antinodes based on resonant harmonics rules.
+     *
+     * @return A list of distinct (y, x) positions of antinodes within grid bounds.
+     */
+    private fun calculateAntinodesPart2(): List<Pair<Int, Int>> {
+        val allAntinodes = mutableSetOf<Pair<Int, Int>>()
+
+        getFrequencies().forEach { frequency ->
+            val positions = grid.findPositions(frequency)
+            positions.forEachPair { antenna1, antenna2 ->
+                allAntinodes.addAll(
+                    calculateResonantHarmonicAntinodes(antenna1, antenna2, grid.width, grid.height)
+                )
+            }
+        }
+
+        return allAntinodes.toList()
+    }
+
+    /**
+     * Calculates resonant harmonic antinodes for a pair of antennas.
+     *
+     * @param firstAntenna First antenna position (row, col).
+     * @param secondAntenna Second antenna position (row, col).
+     * @param width Width of the grid.
+     * @param height Height of the grid.
+     * @return A list of all resonant harmonic antinodes within bounds.
+     */
+    private fun calculateResonantHarmonicAntinodes(
+        firstAntenna: Pair<Int, Int>, secondAntenna: Pair<Int, Int>, width: Int, height: Int
+    ): List<Pair<Int, Int>> {
+        val offset = calculateVectorOffset(firstAntenna, secondAntenna)
+
+        val maxVerticalSteps = if (offset.first != 0) abs(height / offset.first) else 0
+        val maxHorizontalSteps = if (offset.second != 0) abs(width / offset.second) else 0
+        val maxSteps = min(maxVerticalSteps, maxHorizontalSteps)
+
+        return (0..maxSteps).flatMap { step ->
+            listOf(
+                Pair(
+                    firstAntenna.first + step * offset.first,
+                    firstAntenna.second + step * offset.second
+                ), Pair(
+                    secondAntenna.first - step * offset.first,
+                    secondAntenna.second - step * offset.second
+                )
+            )
+        }.filter { grid.isInBounds(it.first, it.second) }
     }
 
     /**
@@ -104,13 +161,5 @@ class Day08(
                 action(this[i], this[j])
             }
         }
-    }
-
-    /**
-     * Solves Part 2.
-     */
-    override fun part2(): Any {
-        // TODO: Implement Part 2
-        return -1
     }
 }
